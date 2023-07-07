@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -55,5 +56,13 @@ Route::middleware("auth")->group(function () {
         "profile.destroy"
     );
 });
+
+Route::post("/posts", [PostsController::class, "create"])->name(
+    "posts.create"
+);
+
+Route::get("/posts", [PostsController::class, "index"])->name(
+    "posts.index"
+);
 
 require __DIR__ . "/auth.php";

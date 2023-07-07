@@ -10,27 +10,92 @@ This is a Laravel application with a user interface and an admin panel. The appl
 - Separate Admin Login: The admin panel login is accessible via the `admin/login` route.
 
 ## Requirements
-
-- PHP 7.3 or higher
+- VirtualBox or Parallels installed on your local machine
+- PHP 8.2 or higher
 - Composer
-- Laravel 8.x
+- Laravel 9.x Using the Breeze package https://laravel.com/docs/10.x/starter-kits#breeze-and-inertia
+- Laravel's Homestead package found at https://laravel.com/docs/10.x/homestead#installation-and-setup 
 - MySQL or any other supported database
 
 ## Installation
 
-1. Clone the repository to your local machine:
+1. Clone both the `laravel-admin-panel` and `homestead` repositories to to a common directory on your local machine:
 ```bash
 git clone git@github.com:byoung006/laravel-admin-panel.git`
 ```
-2. Install the project dependencies:
+2. Create a new Homestead.yaml file in the `homestead` directory and run the init.sh script:
+```bash 
+cd homestead 
+bash init.sh
+```
+3.  Edit the Homestead.yaml file to include the following:
+```yaml
+---
+ip: "192.168.56.56"
+memory: 2048
+cpus: 2
+provider: virtualbox
+name: laravel-admin-panel
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+  - ~/.ssh/id_rsa
+
+folders:
+  - map: ~/some-directory-of-your-choosing/laravel-admin-panel/admin-panel/
+    to: /home/vagrant/laravel-admin-panel/admin-panel/
+
+sites:
+  - map: admin-panel.test
+    to: /home/vagrant/laravel-admin-panel/admin-panel/public
+
+
+databases:
+  - homestead
+features:
+  - mysql: true
+  - mariadb: false
+  - postgresql: false
+  - ohmyzsh: false
+  - webdriver: false
+
+services:
+  - enabled:
+      - "mysql"
+#  These are disabled by default, but can be enabled if you need
+#  to access these resources based on your implementation
+#    - disabled:
+#        - "postgresql@11-main"
+
+#ports:
+#    - send: 33060 # MySQL/MariaDB
+#      to: 3306
+#    - send: 4040
+#      to: 4040
+#    - send: 54320 # PostgreSQL
+#      to: 5432
+#    - send: 8025 # Mailhog
+#      to: 8025
+#    - send: 9600
+#      to: 9600
+#    - send: 27017
+#      to: 27017
+```
+4. No we need to start the vagrant box and ssh into it to finish the setup. Run the following commands:
 ```bash
+vagrant up
+vagrant ssh
+```
+5. Once you are in the vagrant box, run the following commands:
+```bash
+cd laravel-admin-panel/admin-panel
 composer install
 ```
-3. Create a new `.env` file:
+4. Create a new `.env` file:
 ```bash
 cp .env.example .env
 ```
-4. Generate a new application key:
+5. Generate a new application key:
 ```bash
 php artisan key:generate
 ```

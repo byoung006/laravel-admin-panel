@@ -10,19 +10,14 @@ import {
     TableRow,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import { FetchHandler } from "@/HelperFunctions/FetchHandler";
 
 export default function AdminDashboard(props) {
     const [users, setUsers] = useState([]);
     console.log(users, "users");
-    const getUsers = () => {
-        axios
-            .post("/api/users")
-            .then((response) => {
-                setUsers(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const getUsers = async () => {
+        const users = await FetchHandler("POST", "/api/users", "getUsers");
+        setUsers(users);
     };
     useEffect(() => {
         getUsers();
@@ -68,34 +63,36 @@ export default function AdminDashboard(props) {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {users.map((row) => (
-                                            <TableRow
-                                                key={row.name}
-                                                sx={{
-                                                    "&:last-child td, &:last-child th":
-                                                        { border: 0 },
-                                                }}
-                                            >
-                                                <TableCell
-                                                    component="th"
-                                                    scope="row"
+                                        {users.map((row) => {
+                                            return (
+                                                <TableRow
+                                                    key={row.name}
+                                                    sx={{
+                                                        "&:last-child td, &:last-child th":
+                                                            { border: 0 },
+                                                    }}
                                                 >
-                                                    {row.id}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.name}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.email}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.created_at}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.updated_at}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
+                                                    <TableCell
+                                                        component="th"
+                                                        scope="row"
+                                                    >
+                                                        {row.id}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.name}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.email}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.created_at}
+                                                    </TableCell>
+                                                    {/*<TableCell align="right">*/}
+                                                    {/*    {row.updated_at}*/}
+                                                    {/*</TableCell>*/}
+                                                </TableRow>
+                                            );
+                                        })}
                                     </TableBody>
                                 </Table>
                             </TableContainer>

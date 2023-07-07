@@ -60,4 +60,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->is_admin === 1;
     }
+    public  function posts()
+    {
+        return $this->hasMany(Posts::class);
+    }
 }
