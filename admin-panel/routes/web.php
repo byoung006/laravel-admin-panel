@@ -64,5 +64,7 @@ Route::post("/posts", [PostsController::class, "create"])->name(
 Route::get("/posts", [PostsController::class, "index"])->name(
     "posts.index"
 );
+Route::get('web3-login-message', [\App\Http\Controllers\Web3LoginController::class, 'message']);
+Route::post('web3-login-verify', [\App\Http\Controllers\Web3LoginController::class, 'verify']);
 
 require __DIR__ . "/auth.php";

@@ -8,9 +8,11 @@
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.3",
+        "kornrunner/keccak": "^1.1",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
+        "simplito/elliptic-php": "^1.0",
         "tightenco/ziggy": "^1.0",
         "tymon/jwt-auth": "^2.0"
     },

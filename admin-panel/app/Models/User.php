@@ -18,14 +18,14 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
-    protected $fillable = ["name", "email", "password"];
+    protected $fillable = ["address"];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = ["password", "remember_token", "is_admin"];
+    protected $hidden = ["remember_token", "is_admin"];
 
     /**
      * The attributes that should be cast.
@@ -60,7 +60,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->is_admin === 1;
     }
-    public  function posts()
+    public function posts()
     {
         return $this->hasMany(Posts::class);
     }
