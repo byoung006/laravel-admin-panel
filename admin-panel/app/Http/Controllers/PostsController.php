@@ -14,16 +14,11 @@ class PostsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Models\Posts[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response
      */
     public function index()
     {
-
-    $posts = Posts::getUserPosts(Auth::user());
-
-    return \response()->json([
-        'posts' => $posts
-    ]);
+        return Posts::getUserPosts(Auth::user())->all();
     }
 
     /**
@@ -33,11 +28,12 @@ class PostsController extends Controller
      */
     public function create(Request $request)
     {
-        Auth::user()->posts()->create([
-            'title' => $request->post_title,
-            'body' => $request->post_body,
-        ]);
-
+        Auth::user()
+            ->posts()
+            ->create([
+                "title" => $request->post_title,
+                "body" => $request->post_body,
+            ]);
     }
 
     /**

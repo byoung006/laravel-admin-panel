@@ -28,9 +28,11 @@ Route::get("/", function () {
 
 Route::get("/dashboard", function () {
     return Inertia::render("Dashboard");
-})
-    ->middleware(["auth", "verified"])
-    ->name("dashboard");
+})->name("dashboard");
+
+Route::get("/feed", function () {
+    return Inertia::render("Feed");
+})->name("feed");
 
 Route::prefix("admin")
     ->group(function () {
@@ -57,14 +59,16 @@ Route::middleware("auth")->group(function () {
     );
 });
 
-Route::post("/posts", [PostsController::class, "create"])->name(
-    "posts.create"
-);
+Route::post("/posts", [PostsController::class, "create"])->name("posts.create");
 
-Route::get("/posts", [PostsController::class, "index"])->name(
-    "posts.index"
-);
-Route::get('web3-login-message', [\App\Http\Controllers\Web3LoginController::class, 'message']);
-Route::post('web3-login-verify', [\App\Http\Controllers\Web3LoginController::class, 'verify']);
+Route::get("/posts", [PostsController::class, "index"])->name("posts.index");
+Route::get("web3-login-message", [
+    \App\Http\Controllers\Web3LoginController::class,
+    "message",
+]);
+Route::post("web3-login-verify", [
+    \App\Http\Controllers\Web3LoginController::class,
+    "verify",
+]);
 
 require __DIR__ . "/auth.php";

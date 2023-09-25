@@ -36,19 +36,26 @@ class Web3LoginController extends Controller
             $request->input("signature"),
             $request->input("address")
         );
+        $username = $request->input("username");
         // If $result is true, perform additional logic like logging the user in, or by creating an account if one doesn't exist based on the Ethereum address
         if ($result !== true) {
             return "Invalid signature";
         }
         $address = $request->input("address");
         // check if the address is already in the database
-        $user = User::where("address", $address)->exists();
+        $user = User::where("address", $address)
+            ->where("username", $username)
+            ->first();
         if (!$user) {
             $registeredUserController = new RegisteredUserController();
-            $registeredUserController->store($request->input("address"));
+            $registeredUserController->store($request);
             // return a status message to the user in JSON format
             return "User created";
         }
+        // log the user in
+        Auth::login($user);
+        // return a status message to the user in JSON format
+        // send the user to the dashboard
         return redirect(RouteServiceProvider::HOME);
     }
 

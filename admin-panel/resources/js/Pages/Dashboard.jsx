@@ -1,10 +1,11 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "../Layouts/AuthenticatedLayout.jsx";
 import { Head, useForm } from "@inertiajs/react";
-import InputLabel from "@/Components/InputLabel";
-import TextInput from "@/Components/TextInput";
+import InputLabel from "../Components/InputLabel.jsx";
+import TextInput from "../Components/TextInput.jsx";
 import { useRef, useState, useEffect } from "react";
-import PrimaryButton from "@/Components/PrimaryButton";
-import { FetchHandler } from "@/HelperFunctions/FetchHandler";
+import PrimaryButton from "../Components/PrimaryButton.jsx";
+import { FetchHandler } from "../HelperFunctions/FetchHandler.js";
+import React from "react";
 
 export default function Dashboard(props) {
     const [posts, setPosts] = useState([]);
@@ -18,16 +19,13 @@ export default function Dashboard(props) {
     useEffect(() => {
         const init = async () => {
             const response = await FetchHandler("GET", "posts", "getUserPosts");
-            setPosts(response.posts);
+            setPosts(response);
         };
         init();
     }, [wasSuccessful]);
-    console.log(data, "the data");
-    console.log(posts, "the posts");
 
     const submit = (e) => {
         e.preventDefault();
-        console.log("submitting");
 
         post(route("posts.create", data));
         wasSuccessful && reset("post_body", "post_title");
@@ -35,7 +33,6 @@ export default function Dashboard(props) {
     return (
         <AuthenticatedLayout
             auth={props.auth}
-            errors={props.errors}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                     Dashboard
@@ -50,7 +47,7 @@ export default function Dashboard(props) {
                             <div className="p-6 text-gray-900 dark:text-gray-100">
                                 Create New Post
                             </div>
-                            <InputLabel className={"pl-6"}>
+                            <InputLabel value={"Post Title"} className={"pl-6"}>
                                 Post Title
                             </InputLabel>
                             <TextInput
@@ -64,7 +61,10 @@ export default function Dashboard(props) {
                                 className="p-8 w-full "
                                 autoComplete="post_title"
                             />
-                            <InputLabel className={"pl-6"}>
+                            <InputLabel
+                                value={"Post Content"}
+                                className={"pl-6"}
+                            >
                                 Post Content
                             </InputLabel>
                             <TextInput
@@ -80,7 +80,9 @@ export default function Dashboard(props) {
                                 autoComplete="post_body"
                             />
                             <div className={"p-6"}>
-                                <PrimaryButton>Submit Post</PrimaryButton>
+                                <PrimaryButton disabled={false}>
+                                    Submit Post
+                                </PrimaryButton>
                             </div>{" "}
                         </div>
                     </div>
@@ -95,36 +97,37 @@ export default function Dashboard(props) {
                             <div className="p-6 text-gray-900 dark:text-gray-100">
                                 User Posts
                             </div>
-                            {posts.map((post, index) => {
-                                post.created_at = new Date()
-                                    .toISOString()
-                                    .slice(0, 10);
-                                return (
-                                    <div
-                                        className="p-9 mb-4 bg-white dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-xl  "
-                                        key={post.updated_at}
-                                    >
-                                        <h2
-                                            className="text-gray-100 dark:text-gray-200 text-xl"
-                                            key={index}
+                            {posts.length > 0 &&
+                                posts.map((post, index) => {
+                                    post.created_at = new Date()
+                                        .toISOString()
+                                        .slice(0, 10);
+                                    return (
+                                        <div
+                                            className="p-9 mb-4 bg-white dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-xl  "
+                                            key={post?.updated_at}
                                         >
-                                            {post.title}
-                                        </h2>
-                                        <p
-                                            className="pt-6 text-indigo-300"
-                                            key={post.key}
-                                        >
-                                            {post.body}
-                                        </p>
-                                        <p
-                                            className="pt-6 text-indigo-300"
-                                            key={post.key}
-                                        >
-                                            {post.created_at}
-                                        </p>
-                                    </div>
-                                );
-                            })}{" "}
+                                            <h2
+                                                className="text-gray-100 dark:text-gray-200 text-xl"
+                                                key={index}
+                                            >
+                                                {post.title}
+                                            </h2>
+                                            <p
+                                                className="pt-6 text-indigo-300"
+                                                key={post.key}
+                                            >
+                                                {post.body}
+                                            </p>
+                                            <p
+                                                className="pt-6 text-indigo-300"
+                                                key={post.key}
+                                            >
+                                                {post.created_at}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
                         </div>
                     </div>
                 </div>

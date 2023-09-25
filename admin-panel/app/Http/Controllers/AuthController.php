@@ -21,11 +21,11 @@ class AuthController extends Controller
     /**
      * Get a JWT via given credentials.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Inertia\Response
      */
     public function login()
     {
-        $credentials = request(["email", "password"]);
+        $credentials = request(["username", "address"]);
 
         if (!($token = auth()->attempt($credentials))) {
             return Inertia::render("Auth/Login", [
@@ -34,7 +34,10 @@ class AuthController extends Controller
             ]);
         }
 
-        return $this->respondWithToken($token);
+        return Inertia::render("Dashboard", [
+            "canResetPassword" => false,
+            "status" => "Invalid credentials",
+        ]);
     }
 
     public function AdminLogin()

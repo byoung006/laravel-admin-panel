@@ -11,15 +11,13 @@ import { FetchHandler } from "@/HelperFunctions/FetchHandler";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: "",
-        password: "",
-        remember: "",
+        username: "",
     });
     const [web3Data, setWeb3Data] = useState("");
 
     useEffect(() => {
         return () => {
-            reset("password");
+            reset("username");
         };
     }, []);
 
@@ -31,7 +29,7 @@ export default function Login({ status, canResetPassword }) {
                 : event.target.value
         );
     };
-    const web3Login = async () => {
+    const web3Login = async (username) => {
         let provider;
         let signer;
 
@@ -61,13 +59,15 @@ export default function Login({ status, canResetPassword }) {
                     body: JSON.stringify({
                         address: address,
                         signature: signature,
+                        username: username,
                         _token: "{{ csrf_token() }}",
                     }),
                 });
 
                 const data = await response;
-
-                console.log(data, "the data");
+                if (data.status === 200) {
+                    window.location.href = "/dashboard";
+                }
             } catch (e) {
                 console.log(e);
             }
@@ -92,43 +92,26 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
             <div>
-                <PrimaryButton onClick={web3Login}>
+                <PrimaryButton onClick={() => web3Login(data.username)}>
                     Login with Web3
                 </PrimaryButton>
             </div>
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="username" value="Username" />
 
                     <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
+                        id="username"
+                        name="username"
+                        value={data.username}
                         className="mt-1 block w-full"
                         autoComplete="username"
                         isFocused={true}
                         onChange={handleOnChange}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={handleOnChange}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError message={errors.username} className="mt-2" />
                 </div>
 
                 <div className="block mt-4">
